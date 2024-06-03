@@ -5,7 +5,7 @@ authors = [
   { name="Tom Hanika", email="tomhanika@algebra20.de"},
 ]
 
-description = "An attempt to revive fcatng packages for SAIL."
+description = "An attempt to revive the fca package by ae-hse."
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -16,7 +16,7 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/tomhanika/fcatng"
-#Issues = "https://github.com/pypa/sampleproject/issues"
+Issues = "https://github.com/tomhanika/fcatng/issues"
 
 [build-system]
 requires = ["setuptools>=61.0"]
