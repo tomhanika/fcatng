@@ -5,8 +5,8 @@ Holds a function that computes Duquenne-Guigues basis for a given context
 import copy
 
 from . import closure_operators
-from fcatng.ng.implication import Implication
-import fcatng.ng
+from fcatng.implication import Implication
+import fcatng
 
 def compute_dg_basis(cxt,
                      close=closure_operators.lin_closure,

@@ -6,7 +6,7 @@ class ConceptLattice(object):
     Examples
     ========
     
-    >>> from fcatng.ng import (Context, Concept)
+    >>> from fcatng import (Context, Concept)
     >>> ct = [[True, False, False, True],\
               [True, False, True, False],\
               [False, True, True, False],\

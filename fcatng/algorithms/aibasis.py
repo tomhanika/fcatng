@@ -1,6 +1,6 @@
-import fcatng.ng
+import fcatng
 
-from fcatng.ng.algorithms import closure_operators
+from fcatng.algorithms import closure_operators
 
 
 def kclosure(s, k, cxt):

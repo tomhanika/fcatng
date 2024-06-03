@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Holds a function that scale a many-valued context to "one-valued" context"""
 
-import fcatng.ng
+import fcatng
 
 def scale_mvcontext(mvcontext, scales):
     """Scale many-valued context to one-valued. 

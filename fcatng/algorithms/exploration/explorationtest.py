@@ -4,10 +4,10 @@ import unittest
 
 from exploration import (AttributeExploration, ExplorationDB, 
                         NotCounterexample, IllegalContextModification)
-import fcatng.ng
+import fcatng
 
-from fcatng.ng import Implication
-from fcatng.ng.algorithms.closure_operators import simple_closure as closure
+from fcatng import Implication
+from fcatng.algorithms.closure_operators import simple_closure as closure
 
 
 class GenericExpert(object):

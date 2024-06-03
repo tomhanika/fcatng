@@ -4,7 +4,7 @@
 from xml.dom.minidom import getDOMImplementation
 import xml.parsers.expat
 
-import fca
+import fcatng
 
 def write_xml(path, cs):
     """Write concept system to xml document
@@ -12,7 +12,7 @@ def write_xml(path, cs):
     Examples
     ========
     
-    >>> from fcatng.ng import ConceptLattice
+    >>> from fcatng import ConceptLattice
     >>> c = fcatng.read_cxt('tests/context.cxt')
     >>> cs = ConceptLattice(c)
     >>> write_xml("tests/test.xml", cs)

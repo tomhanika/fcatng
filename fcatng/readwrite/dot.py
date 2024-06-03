@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Holds function that write lattice diagram to .dot file""" 
 
-import fca
+import fcatng
 
 def write_dot(cs, path):
     """For given concept_system writes a .dot file, which contains graph

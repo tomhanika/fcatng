@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-import fcatng.ng
-import fcatng.ng.algorithms.exploration2.exploration as expl
-from fcatng.ng import Implication
+import fcatng
+import fcatng.algorithms.exploration2.exploration as expl
+from fcatng import Implication
 
 
 class ExplorationTest(unittest.TestCase):

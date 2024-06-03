@@ -3,11 +3,11 @@
 import copy
 import itertools
 
-import fcatng.ng
+import fcatng
 
-from fcatng.ng.algorithms.exploration.exploration import (AttributeExploration,
+from fcatng.algorithms.exploration.exploration import (AttributeExploration,
                                                     ExplorationDB)
-from fcatng.ng import Implication
+from fcatng import Implication
 # from fcatng.algorithms.closure_operators import simple_closure as closure
 
 

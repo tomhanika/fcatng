@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Holds function that read context from tab separated txt file"""
 
-import fca
+import fcatng
 
 def read_cxt(path):
     """Read context from path, which is .cxt file

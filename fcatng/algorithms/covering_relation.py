@@ -10,7 +10,7 @@ def compute_covering_relation(cs):
     Examples
     ========
 
-    >>> from fcatng.ng import *
+    >>> from fcatng import *
     >>> ct = [[True, False, False, True],\
               [True, False, True, False],\
               [False, True, True, False],\

@@ -8,7 +8,7 @@ import unittest
 from .exploration import (BasicExploration, NotCounterExamplePremise, 
                         NotCounterExampleConclusion)
 
-import fcatng.ng
+import fcatng
 
 
 class ExplorationTest(unittest.TestCase):

@@ -118,7 +118,7 @@ class Context(object):
     attributes = property(get_attributes)
     
     def get_attribute_implications(self, 
-                                   basis=fca.algorithms.compute_dg_basis,
+                                   basis=fcatng.algorithms.compute_dg_basis,
                                    confirmed=[],
                                    cond=lambda x: True):
         return basis(self, imp_basis=confirmed, cond=cond)
@@ -132,7 +132,7 @@ class Context(object):
     attribute_implications = property(get_attribute_implications)
     
     def get_object_implications(self, 
-                                basis=fca.algorithms.compute_dg_basis,
+                                basis=fcatng.algorithms.compute_dg_basis,
                                 confirmed=None):
         cxt = self.transpose()
         if not self._obj_imp_basis:

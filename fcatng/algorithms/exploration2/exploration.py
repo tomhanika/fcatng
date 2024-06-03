@@ -3,7 +3,7 @@
 
 from copy import copy
 
-import fcatng.ng
+import fcatng
 
 class ExplorationException(Exception):
     pass

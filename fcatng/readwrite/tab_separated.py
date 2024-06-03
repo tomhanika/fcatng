@@ -2,7 +2,7 @@
 """Holds function that read context from tab separated txt file"""
 
 import csv
-import fca
+import fcatng
 
 def read_txt(path):
     """Read context from path, which is tab separated txt file

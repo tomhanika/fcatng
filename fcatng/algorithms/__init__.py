@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """FCA algorithms"""
 
-from fcatng.ng.algorithms.norris import *
-from fcatng.ng.algorithms.covering_relation import *
-from fcatng.ng.algorithms.scaling import *
-from fcatng.ng.algorithms.filters import *
-from fcatng.ng.algorithms.dg_basis import compute_dg_basis
+from fcatng.algorithms.norris import *
+from fcatng.algorithms.covering_relation import *
+from fcatng.algorithms.scaling import *
+from fcatng.algorithms.filters import *
+from fcatng.algorithms.dg_basis import compute_dg_basis
 
 # from .filters import (filter_concepts, compute_index)
 # from .probability import compute_probability

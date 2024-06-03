@@ -2,7 +2,7 @@
 """Holds implementation of Norris' algorithm"""
 
 from copy import copy
-from fcatng.ng import Concept, ConceptSystem
+from fcatng import Concept, ConceptSystem
 
 def derivation(context, extent=0, intent=0):
     """Return result of derivation operator applied to intent or extent.
@@ -15,7 +15,7 @@ def derivation(context, extent=0, intent=0):
 
     Examples
     ========
-    >>> from fcatng.ng import Context
+    >>> from fcatng import Context
     >>> ct = [[True, False, False, True],\
               [True, False, True, False],\
               [False, True, True, False],\
@@ -93,7 +93,7 @@ def norris(context):
     Examples
     ========
 
-    >>> from fcatng.ng import Context, ConceptLattice
+    >>> from fcatng import Context, ConceptLattice
     >>> ct = [[True, False, False, True],\
               [True, False, True, False],\
               [False, True, True, False],\

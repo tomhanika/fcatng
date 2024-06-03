@@ -1,7 +1,7 @@
 """ Holds class for context with partially given exmaples (partial context) """
 
 import fcatng.algorithms
-from fcatng.ng import Context
+from fcatng import Context
 from fcatng.algorithms.closure_operators import aprime, oprime
 from fcatng.algorithms.closure_operators import simple_closure as closure
 from .compare_context import subseteq_table

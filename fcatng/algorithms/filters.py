@@ -1,4 +1,4 @@
-from fcatng.ng import ConceptSystem
+from fcatng import ConceptSystem
 
 # import separation
 # import probability
@@ -153,7 +153,7 @@ def compute_probability(lattice):
 ## Rework to test in test file
 # if __name__ == '__main__':
 #     # Test code
-#     from fcatng.ng import ConceptLattice, Context
+#     from fcatng import ConceptLattice, Context
     
 #     ct = [[True, False, False, True],\
 #           [True, False, True, False],\
@@ -191,7 +191,7 @@ def compute_separation_index(lattice):
 
 ## Rework to testfile 
 # if __name__ == '__main__':
-#     from fcatng.ng import ConceptLattice, Context
+#     from fcatng import ConceptLattice, Context
     
 #     ct = [[True, False, False, True],\
 #           [True, False, True, False],\
@@ -209,7 +209,7 @@ def compute_separation_index(lattice):
 
 from copy import deepcopy
 
-from fcatng.ng import ConceptSystem
+from fcatng import ConceptSystem
 
 
 def compute_istability(lattice):
@@ -217,7 +217,7 @@ def compute_istability(lattice):
     Examples
     ========
 
-    >>> from fcatng.ng import Context, ConceptLattice
+    >>> from fcatng import Context, ConceptLattice
     >>> ct = [[True, False, False, True],\
               [True, False, True, False],\
               [False, True, True, False],\
@@ -283,7 +283,7 @@ def compute_estability(lattice):
 
 if __name__ == '__main__':
     # Test code
-    from fcatng.ng import ConceptLattice, Context
+    from fcatng import ConceptLattice, Context
     from probability import compute_probability
     from stability import (compute_estability, compute_istability)
     from separation import compute_separation_index

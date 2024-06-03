@@ -3,7 +3,7 @@
 Holds class for many valued context
 """
 
-from fcatng.ng import Context
+from fcatng import Context
 
 class ManyValuedContext(Context):
     """

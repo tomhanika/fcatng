@@ -2,7 +2,7 @@
 """Reading many-valued contexts from comma-separated text files"""
 
 import csv
-import fca
+import fcatng
 
 def read_mv_csv(path):
     """Read many-valued context from path, which is comma-separated text file

@@ -5,8 +5,8 @@ Holds functions that compute implication covers for a given context
 import copy
 
 from . import closure_operators
-from fcatng.ng.implication import Implication
-import fcatng.ng
+from fcatng.implication import Implication
+import fcatng
 
 
 def compute_implication_cover(cxt, close=closure_operators.closure):

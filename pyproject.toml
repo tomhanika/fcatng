@@ -1,11 +1,11 @@
 [project]
-name = "fcatng.ng"
+name = "fcatng"
 version = "0.0.7"
 authors = [
   { name="Tom Hanika", email="tomhanika@algebra20.de"},
 ]
 
-description = "An attempt to revive fcatng.ng packages for SAIL."
+description = "An attempt to revive fcatng packages for SAIL."
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -15,7 +15,7 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tomhanika/fcatng.ng"
+Homepage = "https://github.com/tomhanika/fcatng"
 #Issues = "https://github.com/pypa/sampleproject/issues"
 
 [build-system]

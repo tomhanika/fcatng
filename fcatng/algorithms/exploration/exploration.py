@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from copy import copy, deepcopy
-from fcatng.ng import Context
-from fcatng.ng.partial_context import PartialContext
+from fcatng import Context
+from fcatng.partial_context import PartialContext
 
 class ExplorationException(Exception):
     pass

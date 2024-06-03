@@ -3,9 +3,9 @@
 
 import unittest
 from . import closure_operators
-import fcatng.ng
-from fcatng.ng import compute_dg_basis
-from fcatng.ng.implication import Implication
+import fcatng
+from fcatng import compute_dg_basis
+from fcatng.implication import Implication
 
 
 class BasisTest(unittest.TestCase):
