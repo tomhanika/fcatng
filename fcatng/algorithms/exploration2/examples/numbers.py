@@ -37,7 +37,7 @@ class CommandLineExploration(Exploration):
         self._session = self.create_session()
 
     def is_valid(self, imp):
-        print "{0}".format(imp)
+        print(f"{imp}")
         return input('Is the following implication valid? Enter "True" or "False":\n'.format(imp))
 
     def ask_for_counterexample(self):
@@ -54,7 +54,7 @@ class CommandLineExploration(Exploration):
             else:
                 counterexample = self.ask_for_counterexample()
                 intent = self.get_intent(counterexample)
-                print intent
+                print(intent)
                 self._session.reject_implication(imp, counterexample, intent)
 
 if __name__ == "__main__":
