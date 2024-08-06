@@ -1,3 +1,8 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))) # Includes the above folder
+
+
 from fcatng import context
 
 
@@ -29,7 +34,6 @@ def test_get_object_intent_by_index():
 
 
 def test_get_attributes():
-
     result = context_inst.get_attributes()
 
     attributes = ['a', 'b', 'c', 'd']
@@ -40,14 +44,9 @@ def test_get_attributes():
 def test_get_attribute_implications():
     result = context_inst.get_attribute_implications()
 
-    result_str = str(result)
-
-    print("Elemente :")
-
     index = 1
 
     for element in result:
-        print(element)
         if index == 1:
             assert str(element) == 'c, d => b' or str(element) == 'd, c => b'
 
@@ -59,3 +58,59 @@ def test_get_attribute_implications():
                     str(element) == 'b, c, a => d' or str(element) == 'c, a, b => d' or str(element) == 'c, b, a => d')
 
         index = index + 1
+
+
+def test_get_attribute_implications_auto():
+    context_instance = context_inst.get_attribute_implications()
+
+    func_implications = context_instance
+    func_premis_elements, func_conclusion_elements = split_implication(func_implications)
+    test_implications = ["c, d => b", "b => c", "a, c, b => d"]
+    test_premis_elements, test_conclusion_elements = split_implication(test_implications)
+    index = 0
+
+    print("Test Elemente : " + str(test_premis_elements) + str(test_conclusion_elements))
+    print("Func Elemente : " + str(func_premis_elements) + str(func_conclusion_elements))
+
+    for test_premis, test_implication in zip(test_premis_elements, test_conclusion_elements):
+        assert set(test_premis) == set(func_premis_elements[index])
+        assert set(test_implication) == set(func_conclusion_elements[index])
+        index = index + 1
+
+
+def split_implication(implications):
+    """
+    Function to split the given implications in premis and conclusion
+
+    Parameters :
+    implications ( List containing strings ) : One string contains one implication
+
+    Returning :
+    premis_elements( nested list, lists in the nested list contain strings ) : The content of the lists are the elements
+                                                                               of the corresponding premis.
+    conclusion_elements( nested list, lists in the nested list contain strings ) : The content of the lists are the
+                                                                                   elements of the corresponding conclusion.
+
+    Example :
+    implications : ["c, d => b",
+                   "b => c",
+                   "a, c, b => d"]
+
+    premis_elements : [["c", "d"],
+                      ["b"],
+                      ["a", "c", "d"]]
+
+    conclusion_elements : [["b"],
+                          ["c"],
+                          ["d"]]
+    """
+
+    premis_elements = []
+    conclusion_elements = []
+    for implication in implications:
+        element_parts = str(implication).replace(" ", "").split("=>")
+        premis_elements.append(element_parts[0].split(","))
+        conclusion_elements.append(element_parts[1].split(","))
+
+    return premis_elements, conclusion_elements
+
