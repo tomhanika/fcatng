@@ -1,84 +1,46 @@
-import ast
+import json
 import sys
 import os
-from fcatng import context
+import pytest
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))  # Includes the above folder
-
-
-# Initialise the Variables
-ct = [[True, False, False, True],
-      [True, False, True, False],
-      [False, True, True, False],
-      [False, True, True, True]]
-objs = [1, 2, 3, 4]
-attrs = ['a', 'b', 'c', 'd']
-
-
-# Create a Context object
-context_inst = context.Context(ct, objs, attrs)
+from fcatng import context
 
 
 def get_test_data():
-    test_data = []
+    """
+    This function reads the test data, out of the .txt file.
+    """
     with open('context_test_instances.txt', 'r') as file:
-        txt_content = file.read().strip()
-        instances = txt_content.split('\n\n')
-        for instance in instances:
-            data = {}
-            for row in instance.split('\n'):
-                key, value = row.split(' = ')
-                data[key] = ast.literal_eval(value)
-            test_data.append(data)
+        test_data = json.load(file)
     return test_data
 
 
-def test_get_object_intent_by_index():
+@pytest.mark.parametrize("test_data", get_test_data())
+def test_get_object_intent_by_index(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
 
-    # Store the results of the 4 different rows
-    result_row1 = context_inst.get_object_intent_by_index(0)
-    result_row2 = context_inst.get_object_intent_by_index(1)
-    result_row3 = context_inst.get_object_intent_by_index(2)
-    result_row4 = context_inst.get_object_intent_by_index(3)
-
-    assert result_row1 == {'a', 'd'}
-    assert result_row2 == {'a', 'c'}
-    assert result_row3 == {'b', 'c'}
-    assert result_row4 == {'b', 'c', 'd'}
-
-
-def test_get_attributes():
-    result = context_inst.get_attributes()
-
-    attributes = ['a', 'b', 'c', 'd']
-
-    assert result == attributes
-
-
-def test_get_attribute_implications():
-    result = context_inst.get_attribute_implications()
-
-    index = 1
-
-    for element in result:
-        if index == 1:
-            assert str(element) == 'c, d => b' or str(element) == 'd, c => b'
-
-        if index == 2:
-            assert str(element) == 'b => c'
-
-        if index == 3:
-            assert (str(element) == 'a, b, c => d' or str(element) == 'a, c, b => d' or str(element) == 'b, a, c => d' or
-                    str(element) == 'b, c, a => d' or str(element) == 'c, a, b => d' or str(element) == 'c, b, a => d')
-
+    func_results = []
+    index = 0
+    while index < len(context_inst.attributes):
+        print(context_inst.get_object_intent_by_index(index))
+        print(get_set_where_ct_true(test_data['ct'], test_data['attrs'], index))
+        assert context_inst.get_object_intent_by_index(index) == get_set_where_ct_true(test_data['ct'], test_data['attrs'], index)
         index = index + 1
 
 
-def test_get_attribute_implications_auto():
-    context_instance = context_inst.get_attribute_implications()
+@pytest.mark.parametrize("test_data", get_test_data())
+def test_get_attributes(test_data):
+    func_attrs = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_attributes()
+    correct_attrs = test_data['attrs']
 
-    func_implications = context_instance
+    assert func_attrs == correct_attrs
+
+
+@pytest.mark.parametrize("test_data", get_test_data())
+def test_get_attribute_implications(test_data):
+    func_implications = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_attribute_implications()
     func_premis_elements, func_conclusion_elements = split_implication(func_implications)
-    test_implications = ["c, d => b", "b => c", "a, c, b => d"]
+    test_implications = test_data['correct_result']  # ["c, d => b", "b => c", "a, c, b => d"]
     test_premis_elements, test_conclusion_elements = split_implication(test_implications)
     index = 0
 
@@ -124,3 +86,16 @@ def split_implication(implications):
 
     return premis_elements, conclusion_elements
 
+
+def get_set_where_ct_true(cross_table, attributes, index):
+    """
+    Function that returns a set of attributes where the value of the cross-table index is true.
+    """
+    result_set = []
+    for_index = 0
+    for element in cross_table[index]:
+        if element == True:
+            result_set.append(attributes[for_index])
+        for_index = for_index + 1
+
+    return set(result_set)
