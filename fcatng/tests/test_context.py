@@ -1,9 +1,8 @@
+import ast
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))) # Includes the above folder
-
-
 from fcatng import context
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))  # Includes the above folder
 
 
 # Initialise the Variables
@@ -17,6 +16,20 @@ attrs = ['a', 'b', 'c', 'd']
 
 # Create a Context object
 context_inst = context.Context(ct, objs, attrs)
+
+
+def get_test_data():
+    test_data = []
+    with open('context_test_instances.txt', 'r') as file:
+        txt_content = file.read().strip()
+        instances = txt_content.split('\n\n')
+        for instance in instances:
+            data = {}
+            for row in instance.split('\n'):
+                key, value = row.split(' = ')
+                data[key] = ast.literal_eval(value)
+            test_data.append(data)
+    return test_data
 
 
 def test_get_object_intent_by_index():
@@ -68,9 +81,6 @@ def test_get_attribute_implications_auto():
     test_implications = ["c, d => b", "b => c", "a, c, b => d"]
     test_premis_elements, test_conclusion_elements = split_implication(test_implications)
     index = 0
-
-    print("Test Elemente : " + str(test_premis_elements) + str(test_conclusion_elements))
-    print("Func Elemente : " + str(func_premis_elements) + str(func_conclusion_elements))
 
     for test_premis, test_implication in zip(test_premis_elements, test_conclusion_elements):
         assert set(test_premis) == set(func_premis_elements[index])
