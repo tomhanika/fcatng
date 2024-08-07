@@ -18,13 +18,16 @@ def get_test_data():
 @pytest.mark.parametrize("test_data", get_test_data())
 def test_get_object_intent_by_index(test_data):
     context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
-
-    func_results = []
     index = 0
+
+    print(len(context_inst.attributes))
+
     while index < len(context_inst.attributes):
-        print(context_inst.get_object_intent_by_index(index))
-        print(get_set_where_ct_true(test_data['ct'], test_data['attrs'], index))
+        # Vermutung: get_object_intent_by_index(index) , teilweise fehlerhaft.
+        print(index)
+        print(type(context_inst.attributes[index]))
         assert context_inst.get_object_intent_by_index(index) == get_set_where_ct_true(test_data['ct'], test_data['attrs'], index)
+        print("Danach!")
         index = index + 1
 
 
@@ -40,7 +43,7 @@ def test_get_attributes(test_data):
 def test_get_attribute_implications(test_data):
     func_implications = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_attribute_implications()
     func_premis_elements, func_conclusion_elements = split_implication(func_implications)
-    test_implications = test_data['correct_result']  # ["c, d => b", "b => c", "a, c, b => d"]
+    test_implications = test_data['correct_result']
     test_premis_elements, test_conclusion_elements = split_implication(test_implications)
     index = 0
 
