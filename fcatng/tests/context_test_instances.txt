@@ -1,0 +1,7 @@
+ct = [[True, False, False, True],
+      [True, False, True, False],
+      [False, True, True, False],
+      [False, True, True, True]]
+objs = [1, 2, 3, 4]
+attrs = ['a', 'b', 'c', 'd']
+correct_result["c, d => b", "b => c", "a, c, b => d"]
