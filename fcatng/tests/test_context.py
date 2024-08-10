@@ -13,6 +13,7 @@ def get_test_data():
     """
     This function reads the test data, out of the .txt file.
     """
+    # TO-DO : Return an Instance, and the solutions from this function
     with open('context_test_instances.txt', 'r') as file:
         test_data = json.load(file)
     return test_data
@@ -28,9 +29,8 @@ def test_get_object_intent_by_index(test_data):
     index = 0
 
     while index < len(context_inst.objects):
-        # Vermutung: get_object_intent_by_index(index) , teilweise fehlerhaft.
-        assert context_inst.get_object_intent_by_index(index) == get_set_where_ct_true(test_data['ct'],
-                                                                                       test_data['attrs'], index)
+        assert context_inst.get_object_intent_by_index(index) == get_obj_intent(test_data['ct'],
+                                                                                test_data['attrs'], index)
         index = index + 1
 
 
@@ -39,8 +39,26 @@ def test_get_object_intent(test_data):
     cont_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
 
     for obj in test_data['objs']:
-        assert cont_inst.get_object_intent(obj) == get_set_where_ct_true(test_data['ct'], test_data['attrs'],
-                                                                         cont_inst.objects.index(obj))
+        assert cont_inst.get_object_intent(obj) == get_obj_intent(test_data['ct'], test_data['attrs'],
+                                                                  cont_inst.objects.index(obj))
+
+
+@pytest.mark.parametrize("test_data", get_test_data())
+def test_get_attribute_extent_by_index(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    index = 0
+
+    while index < len(context_inst.attributes):
+        assert context_inst.get_attribute_extent_by_index(index) == get_attr_extent(context_inst, index)
+        index = index + 1
+
+
+@pytest.mark.parametrize("test_data", get_test_data())
+def test_get_attribute_extent(test_data):
+    cont_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+
+    for attr in test_data['attrs']:
+        assert cont_inst.get_attribute_extent(attr) == get_attr_extent(cont_inst, cont_inst.attributes.index(attr))
 
 
 @pytest.mark.parametrize("test_data", get_test_data())
@@ -125,7 +143,7 @@ def split_implication(implications):
     return premis_elements, conclusion_elements
 
 
-def get_set_where_ct_true(cross_table, attributes, index):
+def get_obj_intent(cross_table, attributes, index):
     """
     Function that returns a set of attributes where the value of the cross-table index is true.
     """
@@ -134,6 +152,19 @@ def get_set_where_ct_true(cross_table, attributes, index):
     for element in cross_table[index]:
         if element == True:
             result_set.append(attributes[for_index])
+        for_index = for_index + 1
+
+    return set(result_set)
+
+
+def get_attr_extent(cont_inst, index):
+    result_set = []
+    for_index = 0
+
+    for element in cont_inst.transpose()._table[index]:
+        if element == True:
+
+            result_set.append(cont_inst.objects[for_index])
         for_index = for_index + 1
 
     return set(result_set)
