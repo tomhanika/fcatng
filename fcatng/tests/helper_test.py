@@ -1,3 +1,15 @@
+import json
+
+
+def get_test_data(file_path):
+    """
+    This function reads the test data, out of the .txt file.
+    """
+    # TO-DO : Return an Instance, and the solutions from this function
+    with open(file_path, 'r') as file:
+        test_data = json.load(file)
+    return test_data
+
 
 def split_implication(implications):
     """
