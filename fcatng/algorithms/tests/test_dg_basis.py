@@ -15,6 +15,17 @@ file_path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'contex
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_generalized_compute_dg_basis(test_data):
+    """
+    Tests the function 'generalized_compute_dg_basis' from 'dg_basis'.
+
+    Parameters of 'generalized_compute_dg_basis' :
+    - cxt       : Context object.
+    - aclose    : 'aclosure' function from 'closure_operators'.
+    - close     : 'lin_closure' or 'simple_closure' from 'closure_operators'.
+    - imp_basis : List that is always = []
+    - cond      : Always remains True.
+    """
+
     cxt = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     aclose = lambda attributes: closure_operators.aclosure(attributes, cxt)
     imp_basis = []
