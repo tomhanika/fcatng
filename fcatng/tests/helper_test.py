@@ -4,6 +4,12 @@ import json
 def get_test_data(file_path):
     """
     This function reads the test data, out of the .txt file.
+
+    Parameters :
+    file_path (String containing the path to 'context_test_instances.txt')
+
+    Returning :
+    test_data ( Instances from the .txt)
     """
     # TO-DO : Return an Instance, and the solutions from this function
     with open(file_path, 'r') as file:
@@ -22,7 +28,8 @@ def split_implication(implications):
     premis_elements( nested list, lists in the nested list contain strings ) : The content of the lists are the elements
                                                                                of the corresponding premis.
     conclusion_elements( nested list, lists in the nested list contain strings ) : The content of the lists are the
-                                                                                   elements of the corresponding conclusion.
+                                                                                   elements of the corresponding
+                                                                                   conclusion.
 
     Example :
     implications : ["c, d => b",
@@ -51,11 +58,20 @@ def split_implication(implications):
 def get_obj_intent(cross_table, attributes, index):
     """
     Function that returns a set of attributes where the value of the cross-table index is true.
+
+    Parameters :
+    cross_table (Cross table of the Context)
+    attributes (list containing the attributes of the context)
+    index (The index of the object)
+
+    Returning :
+    result_set (list containing object intents, which gets converted to a set)
     """
+
     result_set = []
     for_index = 0
     for element in cross_table[index]:
-        if element == True:
+        if element:
             result_set.append(attributes[for_index])
         for_index = for_index + 1
 
@@ -63,12 +79,22 @@ def get_obj_intent(cross_table, attributes, index):
 
 
 def get_attr_extent(cont_inst, index):
+    """
+    Function that returns a set of attributes where the value of the cross-table index is true.
+
+    Parameters :
+    cont_inst (Instance of the 'Context' class)
+    index (The index of the attribute)
+
+    Returning :
+    result_set (list containing attribute extents, which gets converted to a set)
+    """
+
     result_set = []
     for_index = 0
 
     for element in cont_inst.transpose()._table[index]:
-        if element == True:
-
+        if element:
             result_set.append(cont_inst.objects[for_index])
         for_index = for_index + 1
 
