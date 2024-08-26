@@ -162,3 +162,140 @@ def test_set_object_intent(test_data):
     context_inst.set_object_intent(test_data['set_object_intent'][0], test_data['set_object_intent'][1][0])
 
     assert context_inst._table[0] == test_data['set_object_intent'][2]
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_delete_object(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst.delete_object(len(test_data['objs']) - 1)
+
+    assert context_inst.objects == test_data['delete_object']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_delete_object_by_name(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst.delete_object_by_name(test_data['delete_object_name'])
+
+    assert context_inst.objects == test_data['delete_object']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_delete_attribute(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst.delete_attribute(len(test_data['attrs']) - 1)
+
+    assert context_inst.attributes == test_data['delete_attribute']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_delete_attribute_by_name(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst.delete_attribute_by_name(test_data['delete_attribute_name'])
+
+    assert context_inst.attributes == test_data['delete_attribute']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_rename_object(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst.rename_object(test_data['rename_object'][0], test_data['rename_object'][1])
+
+    assert context_inst.objects == test_data['renamed_objects']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_rename_attribute(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst.rename_attribute(test_data['rename_attribute'][0], test_data['rename_attribute'][1])
+
+    assert context_inst.attributes == test_data['renamed_attributes']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_transpose(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+
+    assert context_inst.transpose()._table == test_data['transposed']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_extract_subcontext_filtered_by_attributes(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    subcontext = context_inst.extract_subcontext_filtered_by_attributes(test_data['subcontext_attributes'])
+
+    assert subcontext._table == test_data['subcontext_cor_attributes']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_extract_subcontext(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    subcontext = context_inst.extract_subcontext_filtered_by_attributes(test_data['subcontext_attributes'])
+
+    assert subcontext._table == test_data['subcontext_cor_attributes']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_extract_subtable(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    subtable = context_inst._extract_subtable(test_data['subcontext_attributes'])
+
+    assert subtable == test_data['subtable_cor_attributes']
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_extract_subtable_by_condition(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+
+    def condition(index):
+        return context_inst.objects[index] == test_data['subtable_condition'][0][0]
+
+    # Verwende die condition-Funktion, um die Indizes zu filtern
+    indices = [i for i in range(len(context_inst.objects)) if condition(i)]
+
+    # Extrahiere die Subtabelle basierend auf den gefilterten Indizes
+    subtable = context_inst._extract_subtable_by_condition(condition)
+
+    assert subtable[1] == test_data['subtable_condition'][1]
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_extract_subtable_by_attribute_values(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    values = {
+        test_data['subcontext_attributes'][0]: True,
+        test_data['subcontext_attributes'][1]: False
+    }
+
+    subtable = context_inst._extract_subtable_by_attribute_values(values)
+
+    assert subtable[1] == test_data['subtable_attribute'][1]
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_has_values(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    values = {
+        test_data['subcontext_attributes'][0]: True,
+        test_data['subcontext_attributes'][1]: False
+    }
+
+    assert context_inst._has_values(1, values) == True
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_has_at_least_one_value(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    values = {
+        test_data['subcontext_attributes'][0]: True,
+        test_data['subcontext_attributes'][1]: False
+    }
+
+    assert context_inst._has_at_least_one_value(1, values) == True
+
+
+@pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
+def test_check_attribute_names(test_data):
+    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+
+    assert context_inst._check_attribute_names(test_data['attrs']) is None
