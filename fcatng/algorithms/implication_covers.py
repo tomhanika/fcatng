@@ -9,6 +9,10 @@ from fcatng.implication import Implication
 import fcatng
 
 
+class CustomException(Exception):
+    pass
+
+
 def compute_implication_cover(cxt, close=closure_operators.closure):
     """
     Compute an implication cover for a given *cxt* using 
@@ -40,15 +44,18 @@ def is_redundant(imp, basis, close=closure_operators.simple_closure):
     
     
 def is_new(imp, implications):
+
+    # Fehler : Exceptions als String, nicht als Exceptions geworfen.
+
     if imp.conclusion <= imp.premise:
         return False
     for i in implications:
         if is_subsumed_simply(imp, i):
             return False
         elif is_subsumed(imp, i):
-            raise 'ALERT: %s is sumbsumed by %s' %(imp, i)
+            raise CustomException('ALERT: %s is sumbsumed by %s' %(imp, i))
         elif is_subsumed(i, imp):
-            raise 'ALERT: %s sumbsumes %s' % (imp, i)
+            raise CustomException('ALERT: %s sumbsumes %s' % (imp, i))
     return True
     
 
