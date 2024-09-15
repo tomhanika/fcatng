@@ -44,6 +44,11 @@ def split_implication(implications):
                           ["c"],
                           ["d"]]
     """
+    index = 0
+
+    #print("Helper Start : ")
+    #print(implications)
+    #print("Helper End.")
 
     premis_elements = []
     conclusion_elements = []
@@ -51,6 +56,9 @@ def split_implication(implications):
         element_parts = str(implication).replace(" ", "").split("=>")
         premis_elements.append(element_parts[0].split(","))
         conclusion_elements.append(element_parts[1].split(","))
+
+        #print(index)
+        index += 1
 
     return premis_elements, conclusion_elements
 
