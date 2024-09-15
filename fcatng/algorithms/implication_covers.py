@@ -23,12 +23,12 @@ def compute_implication_cover(cxt, close=closure_operators.closure):
     i = 0
     for intent in cxt.examples():
         i += 1
-        print(('object ', i))
+        #print(('object ', i))
 #        print_basis(basis)
 #        print 'Adding ', intent
 #        raw_input()
         basis = updated_basis(intent, basis, attributes)
-        print((len(basis), 'implications'))
+        #print((len(basis), 'implications'))
     return basis
 
 
@@ -157,12 +157,12 @@ def minimize(cover, close=closure_operators.simple_closure):
     i = 0
     for imp in cover[:]:
         i += 1
-        print(('maximizing premise ', i))
+        #print(('maximizing premise ', i))
         cover.remove(imp)
         imp._premise = close(imp.premise, cover)
         if not imp.conclusion <= imp.premise:
             cover.append(imp)
-        print((len(cover), 'implications'))
+        #print((len(cover), 'implications'))
 
 
 if __name__ == "__main__":    
