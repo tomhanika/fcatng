@@ -8,7 +8,7 @@ from fcatng import context, Concept, ConceptSystem, compute_covering_relation, I
 from fcatng.tests import helper_test
 from fcatng.algorithms.implication_covers import compute_implication_cover, is_redundant, is_new, CustomException, \
     is_subsumed_simply, is_subsumed, remove_subsumed_plus, remove_subsumed, remove_subsumed_simply, add_smartly, \
-    updated_basis
+    updated_basis, minimize
 from fcatng.algorithms import closure_operators
 
 # Path to the test_instances.txt
@@ -186,4 +186,14 @@ def test_updated_basis(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_minimiz(test_data):
-    print("Hello World!")
+    cxt = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    imp_basis = compute_implication_cover(cxt, closure_operators.closure)
+
+    result = minimize(imp_basis)
+
+    if test_data["minimize_result"] == "None":
+        test_result = None
+    else:
+        test_result = test_data["minimize_result"]
+
+    assert result == test_result
