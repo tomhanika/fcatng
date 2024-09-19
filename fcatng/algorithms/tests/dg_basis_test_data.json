@@ -1,0 +1,35 @@
+[
+  {
+    "ct": [[true, false, false, true],
+               [true, false, true, false],
+               [false, true, true, false],
+               [false, true, true, true]],
+    "objs": [1, 2, 3, 4],
+    "attrs": ["a", "b", "c", "d"],
+    "correct_attr_imp": ["c, d => b", "b => c", "a, c, b => d"]
+  },
+  {
+    "ct": [[true, true, true, true, true, false, true, true, true],
+               [false, true, false, true, false, false, false, false, true],
+               [false, true, false, true, false, false, false, false, true],
+               [false, false, false, true, false, false, false, false, false],
+               [false, true, true, true, true, true, false, false, true],
+               [false, true, false, false, false, false, false, false, false],
+               [true, true, true, true ,true, true, true, false, true],
+               [true, false, true, false, false, false, true, true, true]],
+    "objs": [1, 2, 3, 4, 5, 6, 7, 8],
+    "attrs": ["Latin America", "Europe", "Canada", "Asia Pasific",
+              "Middle East", "Africa", "Mexico", "Carribean",
+              "United States"],
+    "correct_attr_imp": ["Carribean => United States, Latin America, Mexico, Canada",
+                         "Mexico => United States, Canada, Latin America",
+                         "Africa => Canada, United States, Asia Pasific, Middle East, Europe",
+                         "Middle East => United States, Asia Pasific, Europe, Canada",
+                         "United States, Asia Pasific => Europe",
+                         "Canada => United States",
+                         "United States, Europe => Asia Pasific",
+                         "Asia Pasific, Europe => United States",
+                         "United States, Asia Pasific, Canada, Europe => Middle East",
+                         "Latin America => United States, Mexico, Canada"]
+  }
+]
