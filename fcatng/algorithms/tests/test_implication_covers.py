@@ -12,7 +12,7 @@ from fcatng.algorithms.implication_covers import compute_implication_cover, is_r
 from fcatng.algorithms import closure_operators
 
 # Path to the test_instances.txt
-file_path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'context_test_instances.json')
+file_path = os.path.join(os.path.dirname(__file__), 'implication_covers_test_data.json')
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
