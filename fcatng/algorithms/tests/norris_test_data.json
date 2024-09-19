@@ -1,0 +1,104 @@
+[
+  {
+    "ct": [[true, false, false, true],
+               [true, false, true, false],
+               [false, true, true, false],
+               [false, true, true, true]],
+    "objs": [1, 2, 3, 4],
+    "attrs": ["a", "b", "c", "d"],
+    "derivation_extent": [1, 2],
+    "derivation_intent": ["b", "c"],
+    "deriv_ext_result": ["a"],
+    "deriv_int_result": [3,4],
+    "norris_result_int": [
+                           ["d", "c", "a", "b"],
+                           ["d", "a"],
+                           ["c", "a"],
+                           ["a"],
+                           ["c", "b"],
+                           ["c"],
+                           [],
+                           ["c", "d", "b"],
+                           ["d"]
+                         ],
+    "norris_result_ext": [
+                           [],
+                           [1],
+                           [2],
+                           [1, 2],
+                           [3, 4],
+                           [2, 3, 4],
+                           [1, 2, 3, 4],
+                           [4],
+                           [1, 4]
+                         ],
+    "concept": [
+                 [1, 2, 3, 5],
+                 ["a", "b", "c"]
+                 ],
+    "concept_val": [
+                     []
+                   ]
+  },
+  {
+    "ct": [[true, true, true, true, true, false, true, true, true],
+           [false, true, false, true, false, false, false, false, true],
+           [false, true, false, true, false, false, false, false, true],
+           [false, false, false, true, false, false, false, false, false],
+           [false, true, true, true, true, true, false, false, true],
+           [false, true, false, false, false, false, false, false, false],
+           [true, true, true, true ,true, true, true, false, true],
+           [true, false, true, false, false, false, true, true, true]],
+    "objs": [1, 2, 3, 4, 5, 6, 7, 8],
+    "attrs": ["Latin America", "Europe", "Canada", "Asia Pasific",
+              "Middle East", "Africa", "Mexico", "Carribean",
+              "United States"],
+    "derivation_extent": [3, 4, 5],
+    "derivation_intent": ["Europe", "Canada", "Asia Pasific"],
+    "deriv_ext_result": ["Asia Pasific"],
+    "deriv_int_result": [1, 5, 7],
+    "norris_result_int": [
+                           ["Middle East", "Canada", "Mexico", "Europe", "United States", "Africa", "Carribean",
+                            "Latin America", "Asia Pasific"],
+                           ["Middle East", "Canada", "United States", "Mexico", "Europe", "Carribean",
+                            "Latin America", "Asia Pasific"],
+                           ["Europe", "United States", "Asia Pasific"],
+                           ["Asia Pasific"],
+                           ["Africa", "Middle East", "Asia Pasific", "Canada", "United States", "Europe"],
+                           ["Middle East", "Asia Pasific", "Canada", "United States", "Europe"],
+                           ["Europe"],
+                           [],
+                           ["Middle East", "Canada", "United States", "Mexico", "Europe", "Africa", "Latin America",
+                            "Asia Pasific"],
+                           ["Latin America", "Middle East", "Mexico", "Asia Pasific", "Canada", "United States",
+                            "Europe"],
+                           ["Carribean", "Latin America", "United States", "Canada", "Mexico"],
+                           ["United States"],
+                           ["Canada", "United States"],
+                           ["Latin America", "Mexico", "Canada", "United States"]
+                         ],
+    "norris_result_ext": [
+                           [],
+                           [1],
+                           [1, 2, 3, 5, 7],
+                           [1, 2, 3, 4, 5, 7],
+                           [5, 7],
+                           [1, 5, 7],
+                           [1, 2, 3, 5, 6, 7],
+                           [1, 2, 3, 4, 5, 6, 7, 8],
+                           [7],
+                           [1, 7],
+                           [8, 1],
+                           [1, 2, 3, 5, 7, 8],
+                           [8, 1, 5, 7],
+                           [8, 1, 7]
+                         ],
+    "concept": [
+                 [3, 4, 5, 6],
+                 ["Canada", "United States", "Mexico", "Europe", "Carribean"]
+               ],
+    "concept_val": [
+                     []
+                   ]
+  }
+]
