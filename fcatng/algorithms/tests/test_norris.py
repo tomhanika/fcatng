@@ -11,7 +11,7 @@ from fcatng.tests import helper_test
 
 
 # Path to the test_instances.txt
-file_path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'context_test_instances.json')
+file_path = os.path.join(os.path.dirname(__file__), 'norris_test_data.json')
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
