@@ -243,7 +243,7 @@
         "derivation_intent": ["Europe", "Canada", "Asia Pasific"],
         "deriv_ext_result": ["Asia Pasific"],
         "deriv_int_result": [1, 5, 7],
-      "norris_result_int": [
+        "norris_result_int": [
                               ["Middle East", "Canada", "Mexico", "Europe", "United States", "Africa", "Carribean",
                                 "Latin America", "Asia Pasific"],
                               ["Middle East", "Canada", "United States", "Mexico", "Europe", "Carribean",
