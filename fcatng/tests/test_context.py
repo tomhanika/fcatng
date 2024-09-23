@@ -3,7 +3,7 @@ import os
 import pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))  # Includes the above folder
-from fcatng import context
+from fcatng import context, Implication
 import fcatng
 import helper_test
 
@@ -73,17 +73,15 @@ def test_get_attributes(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_attribute_implications(test_data):
-    func_implications = (context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
-                         .get_attribute_implications())
-    func_premis_elements, func_conclusion_elements = helper_test.split_implication(func_implications)
-    test_implications = test_data['correct_attr_imp']
-    test_premis_elements, test_conclusion_elements = helper_test.split_implication(test_implications)
-    index = 0
+    cxt = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
 
-    for test_premis, test_implication in zip(test_premis_elements, test_conclusion_elements):
-        assert set(test_premis) == set(func_premis_elements[index])
-        assert set(test_implication) == set(func_conclusion_elements[index])
-        index = index + 1
+    correct_implications = []
+    for prem, conc in zip(test_data['correct_attr_imp_prem'], test_data['correct_attr_imp_conc']):
+        correct_implications.append(Implication(prem, conc))
+
+    implication = cxt.get_attribute_implications()
+    for imp, test in zip(implication, correct_implications):
+        assert imp.__cmp__(test)
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
@@ -93,15 +91,13 @@ def test_get_object_implications(test_data):
     confirmed = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_attribute_implications()
     func_implications = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_object_implications(
         fcatng.algorithms.compute_dg_basis, confirmed)
-    func_premis_elements, func_conclusion_elements = helper_test.split_implication(func_implications)
-    test_implications = test_data['correct_obj_imp']
-    test_premis_elements, test_conclusion_elements = helper_test.split_implication(test_implications)
-    index = 0
 
-    for test_premis, test_implication in zip(test_premis_elements, test_conclusion_elements):
-        assert set(test_premis) == set(func_premis_elements[index])
-        assert set(test_implication) == set(func_conclusion_elements[index])
-        index = index + 1
+    correct_implications = []
+    for prem, conc in zip(test_data['correct_obj_imp_prem'], test_data['correct_obj_imp_conc']):
+        correct_implications.append(Implication(prem, conc))
+
+    for imp, test in zip(func_implications, correct_implications):
+        assert imp.__cmp__(test)
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))

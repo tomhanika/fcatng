@@ -20,34 +20,18 @@ def test_compute_implication_cover(test_data):
     cxt = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     imp_cover = compute_implication_cover(cxt)
 
-    func_premis_elements, func_conclusion_elements = helper_test.split_implication(imp_cover)
-    test_premis_elements, test_conclusion_elements = helper_test.split_implication(test_data["implication_covers_imps"])
+    correct_implications = []
+    for prem, conc in zip(test_data['implication_covers_imps_prem'], test_data['implication_covers_imps_conc']):
+        correct_implications.append(Implication(prem, conc))
 
-    sortet_test_prem = []
-    sortet_test_conc = []
-    for prem in test_premis_elements:
-        sortet_test_prem.append(prem.sort())
-
-    for conc in test_conclusion_elements:
-        sortet_test_conc.append(conc.sort())
-
-    sortet_func_prem = []
-    sortet_func_conc = []
-    for prem in func_premis_elements:
-        sortet_func_prem.append(prem.sort())
-
-    for conc in func_conclusion_elements:
-        sortet_func_conc.append(conc.sort())
-
-    assert sortet_test_prem == sortet_func_prem
-    assert sortet_test_conc == sortet_func_conc
+    for imp, test in zip(imp_cover, correct_implications):
+        assert imp.__cmp__(test)
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_is_redundant(test_data):
     cxt = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     imp = Implication(set(test_data["implication_redundant"][0]), set(test_data["implication_redundant"][1]))
-    #imp_basis = []
     imp_basis = compute_implication_cover(cxt, closure_operators.closure)
 
     result = is_redundant(imp, imp_basis)
@@ -161,27 +145,12 @@ def test_updated_basis(test_data):
 
     result = updated_basis(set(intent), imp_basis, attributes)
 
-    func_premis_elements, func_conclusion_elements = helper_test.split_implication(result)
-    test_premis_elements, test_conclusion_elements = helper_test.split_implication(test_data["updated_basis_result"])
+    correct_implications = []
+    for prem, conc in zip(test_data['updated_basis_result_prem'], test_data['updated_basis_result_prem']):
+        correct_implications.append(Implication(prem, conc))
 
-    sortet_test_prem = []
-    sortet_test_conc = []
-    for prem in test_premis_elements:
-        sortet_test_prem.append(prem.sort())
-
-    for conc in test_conclusion_elements:
-        sortet_test_conc.append(conc.sort())
-
-    sortet_func_prem = []
-    sortet_func_conc = []
-    for prem in func_premis_elements:
-        sortet_func_prem.append(prem.sort())
-
-    for conc in func_conclusion_elements:
-        sortet_func_conc.append(conc.sort())
-
-    assert sortet_test_prem == sortet_func_prem
-    assert sortet_test_conc == sortet_func_conc
+    for imp, test in zip(result, correct_implications):
+        assert imp.__cmp__(test)
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
