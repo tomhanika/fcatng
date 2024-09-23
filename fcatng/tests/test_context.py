@@ -86,8 +86,6 @@ def test_get_attribute_implications(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_object_implications(test_data):
-    # imp_basis ist in diesem Fall immer 'None' weshalb es in der lin_closure Methode immer einen Fehler gibt.
-    # imp_basis sollte ein Set mit implikationen beinhalten, hier wird es manuell übergeben.
     confirmed = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_attribute_implications()
     func_implications = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_object_implications(
         fcatng.algorithms.compute_dg_basis, confirmed)
