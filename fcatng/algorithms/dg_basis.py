@@ -17,6 +17,7 @@ def compute_dg_basis(cxt,
     optimized Ganter algorithm
     """
     aclose = lambda attributes: closure_operators.aclosure(attributes, cxt)
+
     return generalized_compute_dg_basis(cxt.attributes, 
                                         aclose,
                                         close=close,

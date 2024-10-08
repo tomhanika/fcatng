@@ -9,6 +9,15 @@ from fcatng.implication import Implication
 import fcatng
 
 
+class CustomException(Exception):
+    """
+    Created a custom exception class, to resolve the error in 'is_new'.
+    We can now raise ths custom exception with a custom text instead of
+    a string, which lead to an error.
+    """
+    pass
+
+
 def compute_implication_cover(cxt, close=closure_operators.closure):
     """
     Compute an implication cover for a given *cxt* using 
@@ -19,12 +28,12 @@ def compute_implication_cover(cxt, close=closure_operators.closure):
     i = 0
     for intent in cxt.examples():
         i += 1
-        print(('object ', i))
+        #print(('object ', i))
 #        print_basis(basis)
 #        print 'Adding ', intent
 #        raw_input()
         basis = updated_basis(intent, basis, attributes)
-        print((len(basis), 'implications'))
+        #print((len(basis), 'implications'))
     return basis
 
 
@@ -40,15 +49,19 @@ def is_redundant(imp, basis, close=closure_operators.simple_closure):
     
     
 def is_new(imp, implications):
+
+    # Error : Tryed to raise a string instead of an exception.
+    # Solution : Create a custom exception class with a custom text.
+
     if imp.conclusion <= imp.premise:
         return False
     for i in implications:
         if is_subsumed_simply(imp, i):
             return False
         elif is_subsumed(imp, i):
-            raise 'ALERT: %s is sumbsumed by %s' %(imp, i)
+            raise CustomException('ALERT: %s is sumbsumed by %s' %(imp, i))
         elif is_subsumed(i, imp):
-            raise 'ALERT: %s sumbsumes %s' % (imp, i)
+            raise CustomException('ALERT: %s sumbsumes %s' % (imp, i))
     return True
     
 
@@ -150,12 +163,12 @@ def minimize(cover, close=closure_operators.simple_closure):
     i = 0
     for imp in cover[:]:
         i += 1
-        print(('maximizing premise ', i))
+        #print(('maximizing premise ', i))
         cover.remove(imp)
         imp._premise = close(imp.premise, cover)
         if not imp.conclusion <= imp.premise:
             cover.append(imp)
-        print((len(cover), 'implications'))
+        #print((len(cover), 'implications'))
 
 
 if __name__ == "__main__":    
