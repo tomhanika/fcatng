@@ -10,6 +10,11 @@ import fcatng
 
 
 class CustomException(Exception):
+    """
+    Created a custom exception class, to resolve the error in 'is_new'.
+    We can now raise ths custom exception with a custom text instead of
+    a string, which lead to an error.
+    """
     pass
 
 
@@ -45,7 +50,8 @@ def is_redundant(imp, basis, close=closure_operators.simple_closure):
     
 def is_new(imp, implications):
 
-    # Fehler : Exceptions als String, nicht als Exceptions geworfen.
+    # Error : Tryed to raise a string instead of an exception.
+    # Solution : Create a custom exception class with a custom text.
 
     if imp.conclusion <= imp.premise:
         return False
