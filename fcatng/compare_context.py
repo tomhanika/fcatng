@@ -20,8 +20,8 @@ def subseteq_table(table_left, table_right):
     row_length = len(table_left)
     table_size = row_length * len(table_left[0])
     for i in range(table_size):
-        a = (i / row_length)
-        b = (i % row_length)
+        a = i // row_length
+        b = i % row_length
         if not (table_left[b][a] <= table_right[b][a]):
             return False
 
