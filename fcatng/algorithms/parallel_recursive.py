@@ -54,6 +54,13 @@ class ContextParallel:
         return self._amount_attrs
 
     def compute_rows_attrs(self):
+        """
+        Generates a list containing numpy arrays,
+        which hold the indices of all true objects for the specific attribute.
+
+        Return:
+            List containing numpy arrays
+        """
         dataframe = self.get_dataframe()
 
         object_mapping = {name: idx for idx, name in enumerate(dataframe["objects"].to_list())}
@@ -74,6 +81,12 @@ class ContextParallel:
 
 
 def compute_closure(i_concept, i_y, i_context):
+    """
+    Computes the closure of the given concept.
+
+    Return:
+        New Concept as ConceptParallel.
+    """
     new_intent = np.zeros(shape=len(i_context.get_dataframe()["objects"]), dtype=int)
     new_extent = np.ones(shape=len(i_context.get_dataframe().columns[1:]), dtype=int)
 
@@ -95,8 +108,17 @@ def compute_closure(i_concept, i_y, i_context):
 
 
 def generate_from(i_concept, i_y, i_context, i_mgr_list):
-    r_concept = ConceptParallel()
-    skip = True
+    """
+    Recursive algorithm to generate all concepts for the
+    given context based on the initial concept.
+
+    The generatet concepts get stored in the multiprocessing manager list.
+    (This type of list is not necesarry if we just use generate_from,
+    but we need it for parallel_generate_from who calls this method).
+
+    If plan on using this function alone, i recommend using a normal list
+    as it has a much better performance.
+    """
 
     i_mgr_list.append(i_concept)
 
@@ -121,6 +143,9 @@ def generate_from(i_concept, i_y, i_context, i_mgr_list):
 
 
 def process_queue_item(queue, i_context, i_mgr_list):
+    """
+    Processes every concepts system  in the given queue.
+    """
     while not queue.empty():
         try:
             item = queue.get()
@@ -133,16 +158,18 @@ def process_queue_item(queue, i_context, i_mgr_list):
 
 def parallel_generate_from(i_concept, i_y, i_l, i_context, i_mgr_list, i_manager, i_mgr_queue):
     """
+    Generates all formal concepts of the given context, by computing
+    multiple processes of generate_from at the same time.
+
+    The concepts get stored in the mgr_list gets accesed by the wrapper method generate_concepts.
     """
-    L = 2 # len(i_context.get_dataframe().columns[1:]) # Recursion Level
-    P = 4 # multiprocessing.cpu_count()  # Anzahl der Kerne
-    temp_conc = None
-    skip = False
-    r = None
-    processes = []
+    P = 0   # Amount of cores to use
+    for i in i_mgr_queue:
+        P += 1
+
+    L = 2   # Recursion Level
 
     if i_l == L:
-        r = 0
         q_size = 0
         for queue in i_mgr_queue:
             q_size += queue.qsize()
@@ -186,6 +213,12 @@ def parallel_generate_from(i_concept, i_y, i_l, i_context, i_mgr_list, i_manager
 
 
 def generate_concepts(i_context, i_cores=multiprocessing.cpu_count()/2):
+    """
+    Wrapper for parallel_generate_from to compute all the formal concepts of the context.
+
+    Return:
+        List containing the ConceptsParallel objects.
+    """
     if __name__ == '__main__':
         with multiprocessing.Manager() as manager:
             mgr_list = manager.list()
