@@ -4,6 +4,11 @@ import sys
 import pytest
 
 
+# Test parallel
+import numpy as np
+import polars as pl
+
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))  # Includes the above folder
 from fcatng.algorithms import norris, derivation
 from fcatng import context, Concept, ConceptSystem, compute_covering_relation
@@ -11,7 +16,9 @@ from fcatng.tests import helper_test
 
 
 # Path to the test_instances.txt
+from fcatng.algorithms.parallel_recursive import ContextParallel, generate_concepts
 file_path = os.path.join(os.path.dirname(__file__), 'norris_test_data.json')
+import subprocess
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
@@ -78,3 +85,32 @@ def test_compute_covering_relation(test_data):
     assert key_int == set(test_data["concept"][1])
     assert val_cov == correct_result
 
+
+# Test parallel_generate_from, generate_from and norris algorithm.
+
+def generate_random_binary_df_density(rows: int, cols: int, ones_percentage: float = 50):
+    ones_percentage = max(0, min(100, ones_percentage))
+    num_ones = int((ones_percentage / 100) * (rows * (cols - 1)))
+    data = np.zeros(rows * (cols - 1), dtype=int)
+    data[:num_ones] = 1
+    np.random.shuffle(data)
+    data = data.reshape((rows, cols - 1))
+    columns = [f"col_{i}" for i in range(cols - 1)]
+    row_names = [f"row_{i + 1}" for i in range(rows)]
+    df = pl.DataFrame(data, schema=columns)
+    df = df.with_columns(pl.Series("row", row_names).alias("row_name"))
+    df = df.select(["row_name"] + df.columns[:-1])
+
+    return df
+
+
+random_df = generate_random_binary_df_density(100, 15, 75)
+random_df = random_df.rename({"row_name": "objects"})
+
+context_parallel = ContextParallel(random_df)
+
+concepts = generate_concepts(context_parallel)
+
+
+
+print(concepts)
