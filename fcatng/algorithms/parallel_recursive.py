@@ -212,43 +212,26 @@ def parallel_generate_from(i_concept, i_y, i_l, i_context, i_mgr_list, i_manager
     return
 
 
-def generate_random_binary_df_density(rows: int, cols: int, ones_percentage: float = 50):
-    ones_percentage = max(0, min(100, ones_percentage))
-    num_ones = int((ones_percentage / 100) * (rows * (cols - 1)))
-    data = np.zeros(rows * (cols - 1), dtype=int)
-    data[:num_ones] = 1
-    np.random.shuffle(data)
-    data = data.reshape((rows, cols - 1))
-    columns = [f"col_{i}" for i in range(cols - 1)]
-    row_names = [f"row_{i + 1}" for i in range(rows)]
-    df = pl.DataFrame(data, schema=columns)
-    df = df.with_columns(pl.Series("row", row_names).alias("row_name"))
-    df = df.select(["row_name"] + df.columns[:-1])
+def generate_concepts(i_context, i_cores=0):
+    if __name__ == '__main__':
+        """
+        Wrapper for parallel_generate_from to compute all the formal concepts of the context.
 
-    return df
+        Return:
+            List containing the ConceptsParallel objects.
+        """
+        with multiprocessing.Manager() as manager:
+            mgr_list = manager.list()
+            mgr_queue = []
+            if i_cores > int(multiprocessing.cpu_count()) or i_cores <= 0:
+                [manager.Queue() for _ in range(int(multiprocessing.cpu_count()/2))]
+            else:
+                [manager.Queue() for _ in range(i_cores)]
 
+            initial_ext = [1 for _ in range(i_context.get_dataframe().height)]
+            initial_int = [0 for _ in range(i_context.get_amount_attrs())]
+            initial_concept = ConceptParallel(initial_ext, initial_int)
 
-random_df = generate_random_binary_df_density(100, 20, 75)
-random_df = random_df.rename({"row_name": "objects"})
-
-context_parallel = ContextParallel(random_df)
-
-
-if __name__ == '__main__':
-    """
-    Wrapper for parallel_generate_from to compute all the formal concepts of the context.
-
-    Return:
-        List containing the ConceptsParallel objects.
-    """
-    with multiprocessing.Manager() as manager:
-        mgr_list = manager.list()
-        mgr_queue = [manager.Queue() for _ in range(int(multiprocessing.cpu_count()/2))]
-
-        initial_ext = [1 for _ in range(context_parallel.get_dataframe().height)]
-        initial_int = [0 for _ in range(context_parallel.get_amount_attrs())]
-        initial_concept = ConceptParallel(initial_ext, initial_int)
-
-        parallel_generate_from(initial_concept, 0, 0, context_parallel, mgr_list, manager, mgr_queue)
-        print(len(list(mgr_list)))
+            parallel_generate_from(initial_concept, 0, 0, i_context, mgr_list, manager, mgr_queue)
+            print(len(list(mgr_list)))
 
