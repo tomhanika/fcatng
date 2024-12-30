@@ -6,7 +6,7 @@ from io import StringIO
 import caspailleur
 import polars as pl
 import numpy as np
-import fcatng
+#import fcatng
 import multiprocessing
 from multiprocessing import Manager
 import pandas as pd
@@ -33,7 +33,7 @@ class ContextParallel:
         self._num_attrs = np.arange(1, len(dataframe.columns[1:]))
         self._rows = self.compute_rows_attrs()
         self._table = dataframe[:, 1:].to_numpy()
-        self._amount_attrs = dataframe.columns[1:]
+        self._amount_attrs = len(dataframe.columns[1:])
 
     def get_dataframe(self):
         return self._dataframe
@@ -87,8 +87,8 @@ def compute_closure(i_concept, i_y, i_context):
     Return:
         New Concept as ConceptParallel.
     """
-    new_intent = np.zeros(shape=len(i_context.get_dataframe()["objects"]), dtype=int)
-    new_extent = np.ones(shape=len(i_context.get_dataframe().columns[1:]), dtype=int)
+    new_extent = np.zeros(shape=len(i_context.get_dataframe()["objects"]), dtype=int)
+    new_intent = np.ones(shape=len(i_context.get_dataframe().columns[1:]), dtype=int)
 
     matching_objects = []
 
@@ -104,7 +104,7 @@ def compute_closure(i_concept, i_y, i_context):
             if i_context.get_table()[i-1, j-1] == 0:
                 new_intent[j-1] = 0
 
-    return ConceptParallel(new_extent, new_intent.tolist())
+    return ConceptParallel(new_extent.tolist(), new_intent.tolist())
 
 
 def generate_from(i_concept, i_y, i_context, i_mgr_list):
@@ -122,10 +122,10 @@ def generate_from(i_concept, i_y, i_context, i_mgr_list):
 
     i_mgr_list.append(i_concept)
 
-    if np.array_equal(i_concept.get_intent(), i_context.get_num_attrs()) or i_y > len(i_context.get_amount_attrs()):
+    if np.array_equal(i_concept.get_intent(), i_context.get_num_attrs()) or i_y > i_context.get_amount_attrs():
         return
 
-    for j in range(i_y, len(i_context.get_amount_attrs())):
+    for j in range(i_y, i_context.get_amount_attrs()):
         if i_concept.get_intent()[j] == 0:
 
             r_concept = compute_closure(i_concept, j, i_context)
@@ -212,22 +212,43 @@ def parallel_generate_from(i_concept, i_y, i_l, i_context, i_mgr_list, i_manager
     return
 
 
-def generate_concepts(i_context, i_cores=multiprocessing.cpu_count()/2):
+def generate_random_binary_df_density(rows: int, cols: int, ones_percentage: float = 50):
+    ones_percentage = max(0, min(100, ones_percentage))
+    num_ones = int((ones_percentage / 100) * (rows * (cols - 1)))
+    data = np.zeros(rows * (cols - 1), dtype=int)
+    data[:num_ones] = 1
+    np.random.shuffle(data)
+    data = data.reshape((rows, cols - 1))
+    columns = [f"col_{i}" for i in range(cols - 1)]
+    row_names = [f"row_{i + 1}" for i in range(rows)]
+    df = pl.DataFrame(data, schema=columns)
+    df = df.with_columns(pl.Series("row", row_names).alias("row_name"))
+    df = df.select(["row_name"] + df.columns[:-1])
+
+    return df
+
+
+random_df = generate_random_binary_df_density(100, 20, 75)
+random_df = random_df.rename({"row_name": "objects"})
+
+context_parallel = ContextParallel(random_df)
+
+
+if __name__ == '__main__':
     """
     Wrapper for parallel_generate_from to compute all the formal concepts of the context.
 
     Return:
         List containing the ConceptsParallel objects.
     """
-    if __name__ == '__main__':
-        with multiprocessing.Manager() as manager:
-            mgr_list = manager.list()
-            mgr_queue = [manager.Queue() for _ in range(i_cores)]
+    with multiprocessing.Manager() as manager:
+        mgr_list = manager.list()
+        mgr_queue = [manager.Queue() for _ in range(int(multiprocessing.cpu_count()/2))]
 
-            initial_ext = [1 for _ in range(i_context.get_dataframe().height)]
-            initial_int = [0 for _ in range(i_context.get_amount_attrs())]
-            initial_concept = ConceptParallel(initial_ext, initial_int)
+        initial_ext = [1 for _ in range(context_parallel.get_dataframe().height)]
+        initial_int = [0 for _ in range(context_parallel.get_amount_attrs())]
+        initial_concept = ConceptParallel(initial_ext, initial_int)
 
-            parallel_generate_from(initial_concept, 0, 0, i_context, mgr_list, manager, mgr_queue)
+        parallel_generate_from(initial_concept, 0, 0, context_parallel, mgr_list, manager, mgr_queue)
+        print(len(list(mgr_list)))
 
-    return list(mgr_list)
