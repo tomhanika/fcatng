@@ -233,5 +233,7 @@ def generate_concepts(i_context, i_cores=0):
             initial_concept = ConceptParallel(initial_ext, initial_int)
 
             parallel_generate_from(initial_concept, 0, 0, i_context, mgr_list, manager, mgr_queue)
-            print(len(list(mgr_list)))
+
+            return list(mgr_list)
+    return []
 
