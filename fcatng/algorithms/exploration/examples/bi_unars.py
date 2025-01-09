@@ -70,8 +70,7 @@ class Equality(object):
 class CommandLineExpert(object):
 
     def is_valid(self, imp):
-        print "{0}".format(imp)
-        return input('Is the following implication valid? Enter "True" or "False": {0}'.format(imp))
+        return input(f'Is the following implication valid:\n{imp}?\nIf not, press Enter without typing anything.\n')
                                                                                     
     def explore(self, exploration):
         while exploration.get_open_implications():
@@ -83,9 +82,9 @@ class CommandLineExpert(object):
                 exploration.reject_implication(imp)
 
     def provide_counterexample(self, imp):
-        print 'Provide a counterexample by typing in two tuples.'
-        bu = BiUnar(input('f: '), input('g: '))
-        if input('Add as a partial example? Enter "True" or "False": '):
+        print('Provide a counterexample by typing in two tuples.')
+        bu = BiUnar(eval(input('f: ')), eval(input('g: ')))
+        if input('Add as a partial example? If not, press Enter without typing anything.\n'):
             intent = generate_partial_counterexample(imp, bu)
         else:
             intent = [bu_intent(bu)] * 2    # since our context is partial

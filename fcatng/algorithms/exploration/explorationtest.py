@@ -2,7 +2,7 @@
 # encoding: utf-8
 import unittest
 
-from exploration import (AttributeExploration, ExplorationDB, 
+from .exploration import (AttributeExploration, ExplorationDB,
                         NotCounterexample, IllegalContextModification)
 import fcatng
 
