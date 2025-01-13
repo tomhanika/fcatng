@@ -93,6 +93,12 @@ class ExplorationSession(object):
     def get_candidates(self):
         return self._basis.get_dg_basis()
 
+    def has_open_questions(self):
+        return len(self.get_candidates()) > 0
+
+    def get_open_question(self):
+        return self.get_candidates()[0]
+
     def accept_implication(self, imp):
         self._basis.add_background_implication(imp)
 
