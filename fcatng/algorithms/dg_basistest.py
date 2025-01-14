@@ -70,7 +70,7 @@ class RelativeBasisTest(unittest.TestCase):
     
     def test_relative_basis(self):
         simple_basis = compute_dg_basis(self.cxt)
-        self.assertEqual(len(simple_basis), 3)
+        self.assertEqual(len(simple_basis), 3, simple_basis)
         relative_basis = compute_dg_basis(self.cxt, imp_basis=self.basis)
         self.assertEqual(len(set(relative_basis) & set(self.basis)), 0)
         self.assertEqual(len(relative_basis), 2)

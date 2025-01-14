@@ -52,20 +52,52 @@ def generalized_compute_dg_basis(attributes,
     algorithm with partially given examples.
     
     """
+    generator = relative_basis_generator(attributes,
+                                         aclose,
+                                         close=close,
+                                         imp_basis=imp_basis,
+                                         cond=cond
+                                         )
+    basis = []
+    try:
+        implication = next(generator)
+        while True:
+            basis.append(implication)
+            implication = generator.send(True)
+    except StopIteration:
+        pass
+
+    return basis
+
+
+def relative_basis_generator(attributes,
+                             aclose,
+                             close=closure_operators.simple_closure,
+                             imp_basis=[],
+                             cond=lambda x: True):
+    """Generate the canonical basis relative to imp_basis using optimized Ganter's algorithm.
+
+    *aclose* is a closure operator on the set of attributes.
+    We need this to implement the exploration
+    algorithm with partially given examples.
+
+    """
     relative_basis = []
-    
+
     a = close(set(), imp_basis)
     i = len(attributes)
-    
+
     while len(a) < len(attributes):
         a_closed = set(aclose(a))
         if a != a_closed and cond(a):
-            relative_basis.append(Implication(a.copy(), a_closed.copy()))
+            implication = Implication(a.copy(), a_closed.copy())
+            if (yield implication):
+                relative_basis.append(implication)
         if (a_closed - a) & set(attributes[: i]):
-            a -= set(attributes[i :])
+            a -= set(attributes[i:])
         else:
             if len(a_closed) == len(attributes):
-                return relative_basis
+                return
             a = a_closed
             i = len(attributes)
         for j in range(i - 1, -1, -1):
@@ -73,13 +105,12 @@ def generalized_compute_dg_basis(attributes,
             if m in a:
                 a.remove(m)
             else:
-                b = close(a | set([m]), relative_basis + imp_basis)
+                b = close(a | {m}, relative_basis + imp_basis)
                 if not (b - a) & set(attributes[: j]):
                     a = b
                     i = j
                     break
 
-    return relative_basis
 
 if __name__ == "__main__":    
     # objects = ['Air Canada', 'Air New Zeland', 'All Nippon Airways',
