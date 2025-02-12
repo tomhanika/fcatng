@@ -55,7 +55,7 @@ class Implication(object):
         return self._conclusion - self._premise
     
     premise = property(get_premise)
-    conclusion = property(get_reduced_conclusion)
+    conclusion = property(get_conclusion)
         
     def __repr__(self):
         try:
