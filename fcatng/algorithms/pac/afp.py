@@ -10,15 +10,17 @@ def queries(i, epsilon, delta):
 
 
 class PACBasisCalculator:
-    def __init__(self, attributes, member, sample):
+    def __init__(self, attributes, member, sample, closure=None):
         self.attributes = attributes
         self.member = member
         self.sample = sample
+        self.closure = closure
         self.basis = []
 
-    def calculate(self, epsilon, delta):
+    def calculate(self, epsilon, delta, strong=False):
+        generate_counterexample = self.find_strong_counterexample if strong else self.find_counterexample
         i = 1
-        counterexample, positive = self.find_counterexample(queries(i, epsilon, delta))
+        counterexample, positive = generate_counterexample(queries(i, epsilon, delta))
         while counterexample is not None:
             #print(len(self.basis))
             #print(counterexample, positive)
@@ -33,7 +35,7 @@ class PACBasisCalculator:
                 else:
                     self.basis.append(Implication(counterexample, set(self.attributes)))
             i += 1
-            counterexample, positive = self.find_counterexample(queries(i, epsilon, delta))
+            counterexample, positive = generate_counterexample(queries(i, epsilon, delta))
 
     def find_counterexample(self, k):
         print(k, len(self.basis))
@@ -46,6 +48,20 @@ class PACBasisCalculator:
                     return x, True
             elif closed:
                 return x, False
+        return None, None
+
+    def find_strong_counterexample(self, k):
+        assert self.closure is not None
+        print(k, len(self.basis))
+        for i in range(k):
+            x = self.sample()
+            actual_closure = self.closure(x)
+            current_closure = closure_operators.simple_closure(x, self.basis)
+            if actual_closure < current_closure:
+                return actual_closure, True
+            elif actual_closure != current_closure:
+                # Here, we are biased towards negative counterexamples
+                return current_closure, False
         return None, None
 
     def weaken(self, model):
