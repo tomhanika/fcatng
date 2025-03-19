@@ -17,7 +17,7 @@ class PACBasisCalculator:
         self.closure = closure
         self.basis = []
 
-    def calculate(self, epsilon, delta, strong=False):
+    def calculate(self, epsilon, delta, strong=False, upper=False):
         generate_counterexample = self.find_strong_counterexample if strong else self.find_counterexample
         i = 1
         counterexample, positive = generate_counterexample(queries(i, epsilon, delta))
@@ -25,15 +25,21 @@ class PACBasisCalculator:
             #print(len(self.basis))
             #print(counterexample, positive)
             if positive:
+                assert not upper
                 self.weaken(counterexample)
             else:
                 for imp in self.basis:
                     c = imp.premise & counterexample
                     if imp.premise != c and not self.member(c):
                         imp._premise = c
+                        if upper:
+                            imp._conclusion = self.closure(c)
                         break
                 else:
-                    self.basis.append(Implication(counterexample, set(self.attributes)))
+                    self.basis.append(Implication(counterexample,
+                                                  self.closure(counterexample)
+                                                  if upper
+                                                  else set(self.attributes)))
             i += 1
             counterexample, positive = generate_counterexample(queries(i, epsilon, delta))
 
