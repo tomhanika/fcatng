@@ -31,9 +31,11 @@ class PACRuleCalculator:
         while counterexample is not None:
             for imp in self.rules:
                 c = imp.premise & counterexample
-                if imp.premise != c:
-                    if self.update_implication(imp, c):
-                        break
+                if (imp.premise != c and
+                        # c is closed w.r.t. other rules
+                        all(r.is_respected(c) for r in self.rules) and
+                        self.update_implication(imp, c)):
+                    break
             else:
                 imp = Implication(counterexample, set(self.cxt.attributes))
                 self.rules.append(imp)
@@ -54,7 +56,9 @@ class PACRuleCalculator:
         old_conclusion = imp.conclusion.copy()
         counterexamples = self.find_counterexamples(self.rules)
         while (len(counterexamples) > (1-self.conf) * len(self.cxt) or
-               self.compute_confidence(imp) < self.iconf):
+               self.compute_confidence(imp) < self.iconf or
+               # another rule's premise is not closed w.r.t. imp
+               any(not imp.is_respected(r.premise) for r in self.rules if r != imp)):
             imp._conclusion &= random.choice(self.find_counterexamples([imp]))
             if imp.conclusion == imp.premise:
                 imp._conclusion = old_conclusion
