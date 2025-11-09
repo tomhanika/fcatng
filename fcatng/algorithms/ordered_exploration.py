@@ -58,15 +58,16 @@ class OrderedExploration(object):
                 name, counterexample = self.find_counterexample(impl)
                 if counterexample is None:
                     self.accept_implication(impl)
-                    print(f'Accepted: {impl}')
+                    if len(self.implications) % 100 == 0:
+                        print(f'Accepted #{len(self.implications)}: {impl}')
                     break
                 else:
                     try:
                         self.reject_implication(impl, name, counterexample)
+                        impl._conclusion &= counterexample
                     except NotCounterexample:
                         print(f'{name}: {counterexample} is not a valid counterexample for {impl}.')
                     except IllegalContextModification:
                         print(f'{name}: {counterexample} conflicts with background knowledge or accepted implications.')
                     except NotUniqueObjectName:
                         print(f'The context already contains an object named "{name}".')
-                    impl._conclusion &= counterexample
