@@ -39,7 +39,7 @@ class OrderedExploration(object):
             else:
                 if len(a_closed) == len(self.context.attributes):
                     return
-                a = a_closed
+                a = a_closed.copy()
                 i = len(self.context.attributes)
             for j in range(i-1, -1, -1):
                 m = self.context.attributes[j]
