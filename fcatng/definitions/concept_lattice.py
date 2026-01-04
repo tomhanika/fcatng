@@ -1,4 +1,4 @@
-from .algorithms import norris
+from fcatng.algorithms import norris
 
 class ConceptLattice(object):
     """ConceptLattice class

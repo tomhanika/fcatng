@@ -3,25 +3,25 @@ import os
 import pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))  # Includes the above folder
-from fcatng import context, Implication
+from fcatng import Context, Implication
 import fcatng
 import helper_test
 
 
 # Path to the test_instances.txt
-file_path = 'context_test_data.json'
+file_path = os.path.join(os.path.dirname(__file__), 'context_test_data.json')
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_objects(test_data):
-    func_objs = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_objects()
+    func_objs = Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_objects()
 
     assert set(func_objs) == set(test_data["objs"])
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_object_intent_by_index(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     index = 0
 
     while index < len(context_inst.objects):
@@ -32,7 +32,7 @@ def test_get_object_intent_by_index(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_object_intent(test_data):
-    cont_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    cont_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     index = 0
 
     for obj in test_data['objs']:
@@ -43,7 +43,7 @@ def test_get_object_intent(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_attribute_extent_by_index(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     index = 0
 
     while index < len(context_inst.attributes):
@@ -54,7 +54,7 @@ def test_get_attribute_extent_by_index(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_attribute_extent(test_data):
-    cont_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    cont_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     index = 0
 
     for attr in test_data['attrs']:
@@ -65,7 +65,7 @@ def test_get_attribute_extent(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_attributes(test_data):
-    func_attrs = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_attributes()
+    func_attrs = Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_attributes()
     correct_attrs = test_data['attrs']
 
     assert func_attrs == correct_attrs
@@ -73,7 +73,7 @@ def test_get_attributes(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_attribute_implications(test_data):
-    cxt = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    cxt = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
 
     correct_implications = []
     for prem, conc in zip(test_data['correct_attr_imp_prem'], test_data['correct_attr_imp_conc']):
@@ -86,8 +86,8 @@ def test_get_attribute_implications(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_object_implications(test_data):
-    confirmed = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_attribute_implications()
-    func_implications = context.Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_object_implications(
+    confirmed = Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_attribute_implications()
+    func_implications = Context(test_data['ct'], test_data['objs'], test_data['attrs']).get_object_implications(
         fcatng.algorithms.compute_dg_basis, confirmed)
 
     correct_implications = []
@@ -100,7 +100,7 @@ def test_get_object_implications(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_get_value(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     value = context_inst.get_value(test_data['value_obj'][0], test_data['value_attr'][0])
 
     assert value == test_data['value_obj'][1]
@@ -109,7 +109,7 @@ def test_get_value(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_add_attribute(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.add_attribute(test_data['for_add_attributes'][0], test_data['for_add_attributes'][1][0])
 
     assert context_inst.attributes == test_data['after_add_attribute']
@@ -117,7 +117,7 @@ def test_add_attribute(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_add_object(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.add_object(test_data['for_add_object'][0], test_data['for_add_object'][1][0])
 
     assert context_inst.objects == test_data['after_add_object']
@@ -125,7 +125,7 @@ def test_add_object(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_add_object_with_intent(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.add_object_with_intent(test_data['add_object_intent'][0], test_data['add_object_intent'][1][0])
 
     assert context_inst.objects == test_data['after_add_object']
@@ -134,7 +134,7 @@ def test_add_object_with_intent(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_add_attribute_with_extent(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.add_attribute_with_extent(test_data['add_attribute_extent'][0], test_data['add_attribute_extent'][1][0])
     extents = [inner_list[-1] for inner_list in context_inst._table]
 
@@ -144,7 +144,7 @@ def test_add_attribute_with_extent(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_set_attribute_extent(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.set_attribute_extent(test_data['set_attribute_extent'][0], test_data['set_attribute_extent'][1][0])
 
     assert context_inst._table == test_data['set_attribute_extent_table']
@@ -152,7 +152,7 @@ def test_set_attribute_extent(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_set_object_intent(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.set_object_intent(test_data['set_object_intent'][0], test_data['set_object_intent'][1][0])
 
     assert context_inst._table[0] == test_data['set_object_intent'][2]
@@ -160,7 +160,7 @@ def test_set_object_intent(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_delete_object(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.delete_object(len(test_data['objs']) - 1)
 
     assert context_inst.objects == test_data['delete_object']
@@ -168,7 +168,7 @@ def test_delete_object(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_delete_object_by_name(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.delete_object_by_name(test_data['delete_object_name'])
 
     assert context_inst.objects == test_data['delete_object']
@@ -176,7 +176,7 @@ def test_delete_object_by_name(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_delete_attribute(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.delete_attribute(len(test_data['attrs']) - 1)
 
     assert context_inst.attributes == test_data['delete_attribute']
@@ -184,7 +184,7 @@ def test_delete_attribute(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_delete_attribute_by_name(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.delete_attribute_by_name(test_data['delete_attribute_name'])
 
     assert context_inst.attributes == test_data['delete_attribute']
@@ -192,7 +192,7 @@ def test_delete_attribute_by_name(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_rename_object(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.rename_object(test_data['rename_object'][0], test_data['rename_object'][1])
 
     assert context_inst.objects == test_data['renamed_objects']
@@ -200,7 +200,7 @@ def test_rename_object(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_rename_attribute(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     context_inst.rename_attribute(test_data['rename_attribute'][0], test_data['rename_attribute'][1])
 
     assert context_inst.attributes == test_data['renamed_attributes']
@@ -208,14 +208,14 @@ def test_rename_attribute(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_transpose(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
 
     assert context_inst.transpose()._table == test_data['transposed']
 
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_extract_subcontext_filtered_by_attributes(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     subcontext = context_inst.extract_subcontext_filtered_by_attributes(test_data['subcontext_attributes'])
 
     assert subcontext._table == test_data['subcontext_cor_attributes']
@@ -223,7 +223,7 @@ def test_extract_subcontext_filtered_by_attributes(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_extract_subcontext(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     subcontext = context_inst.extract_subcontext_filtered_by_attributes(test_data['subcontext_attributes'])
 
     assert subcontext._table == test_data['subcontext_cor_attributes']
@@ -231,7 +231,7 @@ def test_extract_subcontext(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_extract_subtable(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     subtable = context_inst._extract_subtable(test_data['subcontext_attributes'])
 
     assert subtable == test_data['subtable_cor_attributes']
@@ -239,7 +239,7 @@ def test_extract_subtable(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_extract_subtable_by_condition(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
 
     def condition(index):
         return context_inst.objects[index] == test_data['subtable_condition'][0][0]
@@ -255,7 +255,7 @@ def test_extract_subtable_by_condition(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_extract_subtable_by_attribute_values(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     values = {
         test_data['subcontext_attributes'][0]: True,
         test_data['subcontext_attributes'][1]: False
@@ -268,7 +268,7 @@ def test_extract_subtable_by_attribute_values(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_has_values(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     values = {
         test_data['subcontext_attributes'][0]: True,
         test_data['subcontext_attributes'][1]: False
@@ -279,7 +279,7 @@ def test_has_values(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_has_at_least_one_value(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
     values = {
         test_data['subcontext_attributes'][0]: True,
         test_data['subcontext_attributes'][1]: False
@@ -290,6 +290,6 @@ def test_has_at_least_one_value(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_check_attribute_names(test_data):
-    context_inst = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    context_inst = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
 
     assert context_inst._check_attribute_names(test_data['attrs']) is None

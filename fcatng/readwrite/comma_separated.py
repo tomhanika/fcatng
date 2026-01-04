@@ -36,25 +36,28 @@ def read_mv_csv(path):
     ['attr1', 'attr2', 'attr3']
 
     """
-    input_file = open(path, "rb")
-    rdr = csv.reader(input_file, delimiter=",")
-    
-    objects = []
-    
-    rec = next(rdr) # read attributes names
-
-    attributes = []
-    for attr in rec:
-        attributes.append(str(attr).strip())
+    with open(path, "r", newline='', encoding='utf-8') as input_file:
+        rdr = csv.reader(input_file, delimiter=",")
         
-    table = []
-    for rec in rdr:
-        objects.append(str(rec[0]).strip())
-        line = []
-        for val in rec[1:]:
-            line.append(val)
-        table.append(line)
-    input_file.close()
+        objects = []
+
+        try:
+            rec = next(rdr) # read attributes names
+        except StopIteration:
+            return fcatng.ManyValuedContext([], [], [])
+
+        attributes = []
+        for attr in rec:
+            attributes.append(str(attr).strip())
+
+        table = []
+        for rec in rdr:
+            if not rec: continue
+            objects.append(str(rec[0]).strip())
+            line = []
+            for val in rec[1:]:
+                line.append(val)
+            table.append(line)
 
     return fcatng.ManyValuedContext(table, objects, attributes)
 

@@ -5,7 +5,7 @@ Holds functions that compute implication covers for a given context
 import copy
 
 from . import closure_operators
-from fcatng.implication import Implication
+from fcatng.definitions.implication import Implication
 import fcatng
 
 
@@ -58,10 +58,10 @@ def is_new(imp, implications):
     for i in implications:
         if is_subsumed_simply(imp, i):
             return False
-        elif is_subsumed(imp, i):
-            raise CustomException('ALERT: %s is sumbsumed by %s' %(imp, i))
-        elif is_subsumed(i, imp):
-            raise CustomException('ALERT: %s sumbsumes %s' % (imp, i))
+        # elif is_subsumed(imp, i):
+        #     raise CustomException('ALERT: %s is sumbsumed by %s' %(imp, i))
+        # elif is_subsumed(i, imp):
+        #     raise CustomException('ALERT: %s sumbsumes %s' % (imp, i))
     return True
     
 

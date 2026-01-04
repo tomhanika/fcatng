@@ -6,7 +6,7 @@ import pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))  # Includes the above folder
 from fcatng.algorithms import norris, derivation
-from fcatng import context, Concept, ConceptSystem, compute_covering_relation
+from fcatng import Context, Concept, ConceptSystem, compute_covering_relation
 from fcatng.tests import helper_test
 
 
@@ -16,7 +16,7 @@ file_path = os.path.join(os.path.dirname(__file__), 'norris_test_data.json')
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_derivation(test_data):
-    cxt = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    cxt = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
 
     deriv_ext = derivation(cxt, extent=test_data["derivation_extent"])
     deriv_int = derivation(cxt, intent=test_data["derivation_intent"])
@@ -27,7 +27,7 @@ def test_derivation(test_data):
 
 @pytest.mark.parametrize("test_data", helper_test.get_test_data(file_path))
 def test_norris(test_data):
-    cxt = context.Context(test_data['ct'], test_data['objs'], test_data['attrs'])
+    cxt = Context(test_data['ct'], test_data['objs'], test_data['attrs'])
 
     norris_data = norris(cxt)
     element_list_objs = []

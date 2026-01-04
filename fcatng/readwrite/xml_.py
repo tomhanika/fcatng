@@ -28,63 +28,64 @@ def write_xml(path, cs):
     objects_ids = dict([(objects[i], "o{0}".format(i+1))  for i in range(len(objects))])
     attributes_ids = dict([(attributes[i], "a{0}".format(i+1))  for i in range(len(attributes))])
     
-    out = file(path, "wb")
+    with open(path, "w", encoding="utf-8") as out:
+        impl = getDOMImplementation()
 
-    impl = getDOMImplementation()
-
-    newdoc = impl.createDocument(None, "conceptsystem", None)
-    top_element = newdoc.documentElement
-    
-    element = newdoc.createElement("objects")
-    for obj in objects:
-        obj_element = newdoc.createElement("object")
-        obj_element.setAttribute("id", objects_ids[obj])
-        textnode = newdoc.createTextNode(obj.encode("utf-8"))
-        obj_element.appendChild(textnode)
-        element.appendChild(obj_element)
-    top_element.appendChild(element)
-    
-    element = newdoc.createElement("attributes")
-    for attr in attributes:
-        attr_element = newdoc.createElement("attribute")
-        attr_element.setAttribute("id", attributes_ids[attr])
-        textnode = newdoc.createTextNode(attr.encode("utf-8"))
-        attr_element.appendChild(textnode)
-        element.appendChild(attr_element)
-    top_element.appendChild(element)
-    
-    element = newdoc.createElement("concepts")
-    for concept in cs:
-        c_element = newdoc.createElement("concept")
+        newdoc = impl.createDocument(None, "conceptsystem", None)
+        top_element = newdoc.documentElement
         
-        e_element = newdoc.createElement("extent")
-        for obj in concept.extent:
+        element = newdoc.createElement("objects")
+        for obj in objects:
             obj_element = newdoc.createElement("object")
-            obj_element.setAttribute("ref", objects_ids[obj])
-            e_element.appendChild(obj_element)
-            
-        c_element.appendChild(e_element)
+            obj_element.setAttribute("id", objects_ids[obj])
+            # In Python 3, createTextNode expects a string, not bytes
+            textnode = newdoc.createTextNode(str(obj))
+            obj_element.appendChild(textnode)
+            element.appendChild(obj_element)
+        top_element.appendChild(element)
         
-        i_element = newdoc.createElement("intent")
-        for attr in concept.intent:
+        element = newdoc.createElement("attributes")
+        for attr in attributes:
             attr_element = newdoc.createElement("attribute")
-            attr_element.setAttribute("ref", attributes_ids[attr])
-            i_element.appendChild(attr_element)
+            attr_element.setAttribute("id", attributes_ids[attr])
+            # In Python 3, createTextNode expects a string, not bytes
+            textnode = newdoc.createTextNode(str(attr))
+            attr_element.appendChild(textnode)
+            element.appendChild(attr_element)
+        top_element.appendChild(element)
+
+        element = newdoc.createElement("concepts")
+        for concept in cs:
+            c_element = newdoc.createElement("concept")
             
-        c_element.appendChild(i_element)
+            e_element = newdoc.createElement("extent")
+            for obj in concept.extent:
+                obj_element = newdoc.createElement("object")
+                obj_element.setAttribute("ref", objects_ids[obj])
+                e_element.appendChild(obj_element)
+
+            c_element.appendChild(e_element)
             
-        m_element = newdoc.createElement("meta")
-        for key in list(concept.meta.keys()):
-            m_element.setAttribute(str(key.replace(" ", "_")), str(concept.meta[key]))
+            i_element = newdoc.createElement("intent")
+            for attr in concept.intent:
+                attr_element = newdoc.createElement("attribute")
+                attr_element.setAttribute("ref", attributes_ids[attr])
+                i_element.appendChild(attr_element)
+
+            c_element.appendChild(i_element)
+
+            m_element = newdoc.createElement("meta")
+            if concept.meta:
+                for key in list(concept.meta.keys()):
+                    m_element.setAttribute(str(key).replace(" ", "_"), str(concept.meta[key]))
+
+            c_element.appendChild(m_element)
             
-        c_element.appendChild(m_element)
+            element.appendChild(c_element)
+
+        top_element.appendChild(element)
         
-        element.appendChild(c_element)
-        
-    top_element.appendChild(element)
-    
-    newdoc.writexml(out, indent="\n", addindent="\t", encoding="UTF-8")
-    out.close()
+        newdoc.writexml(out, indent="\n", addindent="\t", encoding="UTF-8")
 
 
 def read_xml(path):
@@ -179,8 +180,8 @@ def read_xml(path):
     p.EndElementHandler = end_element
     p.CharacterDataHandler = char_data
     
-    f = open(path)
-    p.ParseFile(f)
+    with open(path, "rb") as f:
+        p.ParseFile(f)
     
     return cs
     

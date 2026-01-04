@@ -2,7 +2,8 @@
 """Holds implementation of Norris' algorithm"""
 
 from copy import copy
-from fcatng import Concept, ConceptSystem
+from fcatng.definitions.concept import Concept
+from fcatng.definitions.concept_system import ConceptSystem
 
 def derivation(context, extent=0, intent=0):
     """Return result of derivation operator applied to intent or extent.

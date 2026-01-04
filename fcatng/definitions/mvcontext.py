@@ -3,7 +3,7 @@
 Holds class for many valued context
 """
 
-from fcatng import Context
+from .context import Context
 
 class ManyValuedContext(Context):
     """

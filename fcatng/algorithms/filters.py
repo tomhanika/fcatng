@@ -1,4 +1,4 @@
-from fcatng import ConceptSystem
+from fcatng.definitions.concept_system import ConceptSystem
 
 # import separation
 # import probability
@@ -209,7 +209,7 @@ def compute_separation_index(lattice):
 
 from copy import deepcopy
 
-from fcatng import ConceptSystem
+from fcatng.definitions.concept_system import ConceptSystem
 
 
 def compute_istability(lattice):
