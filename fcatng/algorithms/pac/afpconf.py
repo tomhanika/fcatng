@@ -24,10 +24,11 @@ class PACRuleCalculator:
     # (1) with probability >= 1 - delta, Pr(A in Mod L \ Int K) <= epsilon
     # (2) L has at most conf|G| counterexamples in G
     # (3) each implication in L has confidence at least iconf
-    def calculate(self, epsilon, delta):
+    def calculate(self, epsilon, delta, strong=False):
+        get_counterexample = self.generate_strong_counterexample if strong else self.generate_counterexample
         self.rules = []
         i = 1
-        counterexample = self.generate_counterexample(queries(i, epsilon, delta))
+        counterexample = get_counterexample(queries(i, epsilon, delta))
         while counterexample is not None:
             for imp in self.rules:
                 c = imp.premise & counterexample
@@ -41,7 +42,7 @@ class PACRuleCalculator:
                 self.rules.append(imp)
                 self.update_conclusion(imp) # must be successful since counterexample is not closed in the context
             i += 1
-            counterexample = self.generate_counterexample(queries(i, epsilon, delta))
+            counterexample = get_counterexample(queries(i, epsilon, delta))
 
     def update_implication(self, imp, new_premise):
         old_premise = imp.premise.copy()
@@ -76,6 +77,15 @@ class PACRuleCalculator:
                 return x
         return None
 
+    def generate_strong_counterexample(self, k):
+        for i in range(k):
+            x = self.sample()
+            actual_closure = context_closure(x, self.cxt)
+            current_closure = simple_closure(x, self.rules)
+            if not actual_closure <= current_closure :
+                return current_closure
+        return None
+
     def compute_confidence(self, imp):
         p, c = 0, 0
         for e in self.cxt.examples():
@@ -83,4 +93,4 @@ class PACRuleCalculator:
                 p += 1
                 if imp.conclusion <= e:
                     c += 1
-        return c / p
+        return c / p if p > 0 else 1
