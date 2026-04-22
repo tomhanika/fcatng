@@ -1,6 +1,6 @@
 [project]
 name = "fcatng"
-version = "0.0.8"
+version = "0.0.9"
 authors = [
   { name="Tom Hanika", email="tomhanika@algebra20.de"},
 ]
